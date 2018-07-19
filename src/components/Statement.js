@@ -1,4 +1,5 @@
-import React, { Component, Fragment } from "react";
+import React, { Component } from "react";
+import { Card } from "semantic-ui-react";
 
 class Statement extends Component {
   constructor(props) {
@@ -9,22 +10,18 @@ class Statement extends Component {
     };
   }
 
-  componentDidUpdate = () => {};
-
   componentDidMount = () => {
-    // this.highlightBody();
+    this.props.makeStatementArray();
   };
 
   render() {
     return (
-      <div>
-        <h1>Statement</h1>
-        <button onClick={this.props.makeBodyArray}>Highlight</button>
-        <br />
-        <br />
-        <div className="statement">{this.props.content}</div>
-        <div><Fragment>test test</Fragment></div>
-      </div>
+      <Card fluid className="statement">
+        <Card.Content className="content-text">
+          <Card.Header>Statement</Card.Header>
+          <Card.Description>{this.props.content}</Card.Description>
+        </Card.Content>
+      </Card>
     );
   }
 }

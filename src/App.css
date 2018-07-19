@@ -1,15 +1,28 @@
-.App {
-  width: 500px;
-  text-align: justified;
-  margin: auto;
+.statement {
+  text-align: justify;
+  padding: 10px;
 }
 
-.statement {
-  width: 500px;
+.annotations {
   text-align: justify;
-  margin: auto;
+  padding: 10px;
 }
 
 .highlight {
   background-color: greenyellow;
+}
+
+.highlight-alt {
+  background-color: green;
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: 10% 40% 30% 20%;
+  grid-gap: 20px 100px;
+  padding: 10px;
+}
+
+.content-text {
+  font-size: 1.2em;
 }
