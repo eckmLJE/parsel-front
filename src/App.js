@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import "./App.css";
 import Statement from "./components/Statement";
+import HighlightSpan from "./components/HighlightSpan";
+import TextFragment from "./components/TextFragment";
 
 class App extends Component {
   constructor() {
@@ -16,13 +18,13 @@ class App extends Component {
       ],
       annotationId: 1004,
       currentHighlights: [],
-      statementHTML: ""
+      statementArray: []
     };
   }
 
   componentDidMount = () => {
-    this.processAnnotations()
-  }
+    this.processAnnotations();
+  };
 
   processAnnotations = () => {
     let highlights = [];
@@ -35,6 +37,21 @@ class App extends Component {
         highlights.push(this.createHighlight(annotation));
         lastEnd = annotation.end;
       } else {
+        let lastHighlight = highlights.pop();
+        const lastHighlightPrevEnd = lastHighlight.end;
+        lastHighlight.end = annotation.start;
+        highlights.push(lastHighlight);
+        highlights.push({
+          name: `${lastHighlight.name} ${annotation.id}`,
+          start: annotation.start,
+          end: lastHighlightPrevEnd
+        });
+        highlights.push({
+          name: annotation.id,
+          start: lastHighlightPrevEnd,
+          end: annotation.end
+        });
+        lastEnd = annotation.end;
         console.log("overlap detected!");
       }
     });
@@ -49,42 +66,39 @@ class App extends Component {
     };
   };
 
-  highlightBody = () => {
-    let spanCounter = 0;
-    let newBodyHTML = "";
-    this.state.currentHighlights.forEach(highlight => {
-      let nextHTML = this.spanInserter(highlight, spanCounter);
-      newBodyHTML = nextHTML.html;
-      spanCounter += nextHTML.length;
+  makeBodyArray = () => {
+    const statement = this.state.currentStatement;
+    const highlights = this.state.currentHighlights;
+    let newStatementArray = [];
+    let charCounter = 0;
+    highlights.forEach(highlight => {
+      newStatementArray.push(
+        <TextFragment content={statement.slice(charCounter, highlight.start)} />
+      );
+      newStatementArray.push(
+        <HighlightSpan
+          content={statement.slice(highlight.start, highlight.end)}
+          name={highlight.name}
+        />
+      );
+      charCounter = highlight.end;
     });
+    statement.length >= charCounter
+      ? newStatementArray.push(
+          statement.slice(charCounter, statement.length + 1)
+        )
+      : null;
     this.setState({
-      statementHTML: newBodyHTML
+      statementArray: newStatementArray
     });
-  };
-
-  spanInserter = (highlight, spanCounter) => {
-    const start = highlight.start + spanCounter;
-    const end = highlight.end + spanCounter;
-    const body = this.state.statementHTML;
-    const pre = body.slice(0, start);
-    const spanOpen = `<span class='highlight' name='${highlight.name}'>`;
-    const spanString = body.slice(start, end);
-    const spanEnd = "</span>";
-    const post = body.slice(end);
-    return {
-      html: pre.concat(spanOpen, spanString, spanEnd, post),
-      length: (spanOpen + spanEnd).length
-    };
   };
 
   render() {
     return (
       <div className="App">
         <Statement
-          highlights={this.state.currentHighlights}
-          annotations={this.state.currentAnnotations}
-          highlightBody={this.highlightBody}
-          statementHTML={this.state.statementHTML}
+          content={this.state.statementArray}
+          makeBodyArray={this.makeBodyArray}
         />
       </div>
     );

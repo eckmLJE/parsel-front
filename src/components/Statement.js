@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 
 class Statement extends Component {
   constructor(props) {
@@ -19,7 +19,11 @@ class Statement extends Component {
     return (
       <div>
         <h1>Statement</h1>
-        <button onClick={this.props.highlightBody}>Highlight</button>
+        <button onClick={this.props.makeBodyArray}>Highlight</button>
+        <br />
+        <br />
+        <div className="statement">{this.props.content}</div>
+        <div><Fragment>test test</Fragment></div>
       </div>
     );
   }
