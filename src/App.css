@@ -21,6 +21,10 @@
   cursor: pointer;
 }
 
+.annotation:hover {
+  cursor: pointer;
+}
+
 .content-text {
   line-height: 1.2;
   font-size: 1.2em;

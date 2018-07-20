@@ -9,7 +9,7 @@ const Statement = props => {
       style={{ height: "80vh", overflowY: "scroll" }}
     >
       <Card.Content className="content-text">
-        <Card.Header>Statement</Card.Header>
+        <Card.Header>{props.title}</Card.Header>
         <Card.Description className="content-text">
           {props.content}
         </Card.Description>

@@ -5,7 +5,7 @@ import HighlightSpan from "./components/HighlightSpan";
 import TextFragment from "./components/TextFragment";
 import Annotations from "./containers/Annotations";
 import TitleBar from "./components/TitleBar";
-import { Grid } from "semantic-ui-react";
+import { Grid, Segment } from "semantic-ui-react";
 import StatementList from "./components/StatementList";
 
 class App extends Component {
@@ -20,8 +20,7 @@ class App extends Component {
             "Today’s press conference in Helsinki was one of the most disgraceful performances by an American president in memory. The damage inflicted by President Trump’s naiveté, egotism, false equivalence, and sympathy for autocrats is difficult to calculate. But it is clear that the summit in Helsinki was a tragic mistake. President Trump proved not only unable, but unwilling to stand up to Putin. He and Putin seemed to be speaking from the same script as the president made a conscious choice to defend a tyrant against the fair questions of a free press, and to grant Putin an uncontested platform to spew propaganda and lies to the world. It is tempting to describe the press conference as a pathetic rout — as an illustration of the perils of under-preparation and inexperience. But these were not the errant tweets of a novice politician. These were the deliberate choices of a president who seems determined to realize his delusions of a warm relationship with Putin’s regime without any regard for the true nature of his rule, his violent disregard for the sovereignty of his neighbors, his complicity in the slaughter of the Syrian people, his violation of international treaties, and his assault on democratic institutions throughout the world. Coming close on the heels of President Trump’s bombastic and erratic conduct towards our closest friends and allies in Brussels and Britain, today’s press conference marks a recent low point in the history of the American Presidency. That the president was attended in Helsinki by a team of competent and patriotic advisors makes his blunders and capitulations all the more painful and inexplicable. No prior president has ever abased himself more abjectly before a tyrant. Not only did President Trump fail to speak the truth about an adversary; but speaking for America to the world, our president failed to defend all that makes us who we are — a republic of free people dedicated to the cause of liberty at home and abroad. American presidents must be the champions of that cause if it is to succeed. Americans are waiting and hoping for President Trump to embrace that sacred responsibility. One can only hope they are not waiting totally in vain. - John McCain"
         }
       ],
-      currentStatement:
-        "",
+      currentStatement: null,
       currentAnnotations: [
         {
           id: "1001",
@@ -94,7 +93,7 @@ class App extends Component {
   };
 
   makeStatementArray = () => {
-    const statement = this.state.currentStatement;
+    const statement = this.state.currentStatement.content;
     const highlights = this.processAnnotations();
     let newStatementArray = [];
     let charCounter = 0;
@@ -144,7 +143,7 @@ class App extends Component {
       statement => statement.id === id
     );
     this.setState({
-      currentStatement: statement.content
+      currentStatement: statement
     });
   };
 
@@ -153,28 +152,37 @@ class App extends Component {
       <div className="App">
         <TitleBar />
         <div style={{ height: 50 }} />
-        {this.state.currentAnnotations.length > 0 ? (
-          <Grid padded relaxed columns={4}>
-            <Grid.Row>
-              <Grid.Column width={4}>
-                <StatementList
-                  statements={this.state.availableStatements}
-                  setStatement={this.setCurrentStatement}
+
+        <Grid padded relaxed columns={4}>
+          <Grid.Row>
+            <Grid.Column width={4}>
+              <StatementList
+                statements={this.state.availableStatements}
+                setStatement={this.setCurrentStatement}
+              />
+            </Grid.Column>
+            <Grid.Column width={7}>
+              {this.state.currentStatement ? (
+                <Statement
+                  content={this.makeStatementArray()}
+                  title={this.state.currentStatement.title}
                 />
-              </Grid.Column>
-              <Grid.Column width={7}>
-                <Statement content={this.makeStatementArray()} />
-              </Grid.Column>
-              <Grid.Column width={4}>
+              ) : (
+                <Segment>Select an available Statement</Segment>
+              )}
+            </Grid.Column>
+            <Grid.Column width={4}>
+              {this.state.currentStatement ? (
                 <Annotations
                   annotations={this.state.currentAnnotations}
                   hoveredHighlight={this.state.hoveredHighlight}
+                  setHoverHighlight={this.setHoverHighlight}
                 />
-              </Grid.Column>
-              <Grid.Column width={1} />
-            </Grid.Row>
-          </Grid>
-        ) : null}
+              ) : null}
+            </Grid.Column>
+            <Grid.Column width={1} />
+          </Grid.Row>
+        </Grid>
       </div>
     );
   }

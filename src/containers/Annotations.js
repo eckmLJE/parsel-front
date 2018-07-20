@@ -10,6 +10,7 @@ class Annotations extends Component {
             key={annotation.id}
             annotation={annotation}
             hoveredHighlight={this.props.hoveredHighlight}
+            setHoverHighlight={this.props.setHoverHighlight}
           />
         ))}
       </div>

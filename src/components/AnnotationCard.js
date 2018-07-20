@@ -7,7 +7,14 @@ const AnnotationCard = props => {
     : "black";
 
   return (
-    <Segment inverted secondary color={color}>
+    <Segment
+      onMouseEnter={() => props.setHoverHighlight(props.annotation.id)}
+      onMouseLeave={() => props.setHoverHighlight("telephone")}
+      className="annotation"
+      inverted
+      secondary
+      color={color}
+    >
       {props.annotation.content}
     </Segment>
   );
