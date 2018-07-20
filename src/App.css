@@ -1,26 +1,22 @@
-.statement {
-  text-align: justify;
-  padding: 10px;
+.title-bar {
+  height: 50px;
+  background-color: black;
 }
 
-.annotations {
-  text-align: justify;
-  padding: 10px;
+.title {
+  padding-top: 5px;
+  color: white;
+  font-size: 2em;
+  margin-left: 20px;
 }
 
 .highlight {
   background-color: greenyellow;
 }
 
-.highlight-alt {
+.highlight:hover {
   background-color: green;
-}
-
-.grid-container {
-  display: grid;
-  grid-template-columns: 10% 40% 30% 20%;
-  grid-gap: 20px 100px;
-  padding: 10px;
+  cursor: pointer;
 }
 
 .content-text {
