@@ -14,7 +14,7 @@
   background-color: greenyellow;
 }
 
-.highlight:hover {
+.highlight-alt {
   background-color: green;
   cursor: pointer;
 }

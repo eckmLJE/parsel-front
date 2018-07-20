@@ -11,7 +11,7 @@ class Statement extends Component {
   }
 
   componentDidMount = () => {
-    this.props.makeStatementArray();
+    // this.props.makeStatementArray();
   };
 
   render() {

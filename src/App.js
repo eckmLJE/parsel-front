@@ -42,7 +42,7 @@ class App extends Component {
       annotationId: 1004,
       currentHighlights: [],
       statementArray: [],
-      hoveredHighlight: ""
+      hoveredHighlight: "nothing"
     };
   }
 
@@ -96,6 +96,8 @@ class App extends Component {
     let newStatementArray = [];
     let charCounter = 0;
     highlights.forEach(highlight => {
+      const highlightClass = this.checkHoverHighlight(highlight.name);
+      console.log(highlightClass);
       newStatementArray.push(
         <TextFragment
           key={newStatementArray.length}
@@ -104,6 +106,7 @@ class App extends Component {
       );
       newStatementArray.push(
         <HighlightSpan
+          someProp={highlightClass}
           content={statement.slice(highlight.start, highlight.end)}
           name={highlight.name}
           key={highlight.name}
@@ -118,16 +121,24 @@ class App extends Component {
           statement.slice(charCounter, statement.length + 1)
         )
       : null;
-    this.setState({
-      statementArray: newStatementArray
-    });
+    return newStatementArray;
+    // this.setState({
+    //   statementArray: newStatementArray
+    // });
   };
 
   setHoverHighlight = id => {
-    console.log("set highlight id", id);
+    // console.log("set highlight id", id);
     this.setState({
       hoveredHighlight: id
     });
+  };
+
+  checkHoverHighlight = id => {
+    return this.state.hoveredHighlight.includes(id) ||
+      id.includes(this.state.hoveredHighlight)
+      ? "highlight-alt"
+      : "highlight";
   };
 
   render() {
@@ -151,8 +162,8 @@ class App extends Component {
               <Grid.Row>
                 <Grid.Column width={10}>
                   <Statement
-                    content={this.state.statementArray}
-                    makeStatementArray={this.makeStatementArray}
+                    content={this.makeStatementArray()}
+                    // makeStatementArray={this.makeStatementArray}
                   />
                 </Grid.Column>
                 <Grid.Column width={6}>

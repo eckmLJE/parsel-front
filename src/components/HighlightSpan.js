@@ -1,20 +1,15 @@
 import React from "react";
 
+let key = 0;
+
 const HighlightSpan = props => {
-  let key = 0;
-  let highlightClass = "highlight";
-  if (props.hoveredHighlight) {
-    props.hoveredHighlight.includes(props.name)
-      ? (highlightClass = "highlight-alt")
-      : null;
-  }
   return (
     <span
-      className={highlightClass}
+      className={props.someProp}
       name={props.name}
       key={++key}
       onMouseEnter={() => props.setHoverHighlight(props.name)}
-      onMouseLeave={() => props.setHoverHighlight("")}
+      onMouseLeave={() => props.setHoverHighlight("telephone")}
     >
       {props.content}
     </span>
