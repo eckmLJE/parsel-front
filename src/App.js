@@ -6,13 +6,22 @@ import TextFragment from "./components/TextFragment";
 import Annotations from "./containers/Annotations";
 import TitleBar from "./components/TitleBar";
 import { Grid } from "semantic-ui-react";
+import StatementList from "./components/StatementList";
 
 class App extends Component {
   constructor() {
     super();
     this.state = {
+      availableStatements: [
+        {
+          id: "1",
+          title: "Senator McCain's Response to Trump Putin Press Conference",
+          content:
+            "Today’s press conference in Helsinki was one of the most disgraceful performances by an American president in memory. The damage inflicted by President Trump’s naiveté, egotism, false equivalence, and sympathy for autocrats is difficult to calculate. But it is clear that the summit in Helsinki was a tragic mistake. President Trump proved not only unable, but unwilling to stand up to Putin. He and Putin seemed to be speaking from the same script as the president made a conscious choice to defend a tyrant against the fair questions of a free press, and to grant Putin an uncontested platform to spew propaganda and lies to the world. It is tempting to describe the press conference as a pathetic rout — as an illustration of the perils of under-preparation and inexperience. But these were not the errant tweets of a novice politician. These were the deliberate choices of a president who seems determined to realize his delusions of a warm relationship with Putin’s regime without any regard for the true nature of his rule, his violent disregard for the sovereignty of his neighbors, his complicity in the slaughter of the Syrian people, his violation of international treaties, and his assault on democratic institutions throughout the world. Coming close on the heels of President Trump’s bombastic and erratic conduct towards our closest friends and allies in Brussels and Britain, today’s press conference marks a recent low point in the history of the American Presidency. That the president was attended in Helsinki by a team of competent and patriotic advisors makes his blunders and capitulations all the more painful and inexplicable. No prior president has ever abased himself more abjectly before a tyrant. Not only did President Trump fail to speak the truth about an adversary; but speaking for America to the world, our president failed to defend all that makes us who we are — a republic of free people dedicated to the cause of liberty at home and abroad. American presidents must be the champions of that cause if it is to succeed. Americans are waiting and hoping for President Trump to embrace that sacred responsibility. One can only hope they are not waiting totally in vain. - John McCain"
+        }
+      ],
       currentStatement:
-        "Today’s press conference in Helsinki was one of the most disgraceful performances by an American president in memory. The damage inflicted by President Trump’s naiveté, egotism, false equivalence, and sympathy for autocrats is difficult to calculate. But it is clear that the summit in Helsinki was a tragic mistake. President Trump proved not only unable, but unwilling to stand up to Putin. He and Putin seemed to be speaking from the same script as the president made a conscious choice to defend a tyrant against the fair questions of a free press, and to grant Putin an uncontested platform to spew propaganda and lies to the world. It is tempting to describe the press conference as a pathetic rout — as an illustration of the perils of under-preparation and inexperience. But these were not the errant tweets of a novice politician. These were the deliberate choices of a president who seems determined to realize his delusions of a warm relationship with Putin’s regime without any regard for the true nature of his rule, his violent disregard for the sovereignty of his neighbors, his complicity in the slaughter of the Syrian people, his violation of international treaties, and his assault on democratic institutions throughout the world. Coming close on the heels of President Trump’s bombastic and erratic conduct towards our closest friends and allies in Brussels and Britain, today’s press conference marks a recent low point in the history of the American Presidency. That the president was attended in Helsinki by a team of competent and patriotic advisors makes his blunders and capitulations all the more painful and inexplicable. No prior president has ever abased himself more abjectly before a tyrant. Not only did President Trump fail to speak the truth about an adversary; but speaking for America to the world, our president failed to defend all that makes us who we are — a republic of free people dedicated to the cause of liberty at home and abroad. American presidents must be the champions of that cause if it is to succeed. Americans are waiting and hoping for President Trump to embrace that sacred responsibility. One can only hope they are not waiting totally in vain. - John McCain",
+        "",
       currentAnnotations: [
         {
           id: "1001",
@@ -130,6 +139,15 @@ class App extends Component {
       : "highlight";
   };
 
+  setCurrentStatement = id => {
+    const statement = this.state.availableStatements.find(
+      statement => statement.id === id
+    );
+    this.setState({
+      currentStatement: statement.content
+    });
+  };
+
   render() {
     return (
       <div className="App">
@@ -138,12 +156,14 @@ class App extends Component {
         {this.state.currentAnnotations.length > 0 ? (
           <Grid padded relaxed columns={4}>
             <Grid.Row>
-              <Grid.Column width={3} />
-              <Grid.Column width={8}>
-                <Statement
-                  content={this.makeStatementArray()}
-                  // makeStatementArray={this.makeStatementArray}
+              <Grid.Column width={4}>
+                <StatementList
+                  statements={this.state.availableStatements}
+                  setStatement={this.setCurrentStatement}
                 />
+              </Grid.Column>
+              <Grid.Column width={7}>
+                <Statement content={this.makeStatementArray()} />
               </Grid.Column>
               <Grid.Column width={4}>
                 <Annotations
