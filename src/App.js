@@ -103,7 +103,7 @@ class App extends Component {
       );
       newStatementArray.push(
         <HighlightSpan
-          someProp={highlightClass}
+          highlightClass={highlightClass}
           content={statement.slice(highlight.start, highlight.end)}
           name={highlight.name}
           key={highlight.name}
@@ -147,6 +147,11 @@ class App extends Component {
     });
   };
 
+  getSelection = (e) => {
+    console.log(window.getSelection())
+    console.log(e)
+  }
+
   render() {
     return (
       <div className="App">
@@ -166,6 +171,7 @@ class App extends Component {
                 <Statement
                   content={this.makeStatementArray()}
                   title={this.state.currentStatement.attributes.title}
+                  getSelection={this.getSelection}
                 />
               ) : (
                 <Segment>Select an available Statement</Segment>

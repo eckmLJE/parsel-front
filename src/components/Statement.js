@@ -10,7 +10,7 @@ const Statement = props => {
     >
       <Card.Content className="content-text">
         <Card.Header>{props.title}</Card.Header>
-        <Card.Description className="content-text">
+        <Card.Description onMouseUp={props.getSelection} className="content-text">
           {props.content}
         </Card.Description>
       </Card.Content>
