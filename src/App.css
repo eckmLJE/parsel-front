@@ -7,18 +7,18 @@
   padding-top: 5px;
   color: white;
   font-size: 2em;
-  margin-left: 20px;
+  text-align: center;
 }
 
 .highlight {
-  background-color: rgb(155, 170, 255);
+  background-color: rgb(132, 151, 255);
 }
 
 .highlight-alt {
-  background-color: rgb(111, 121, 255);
+  background-color: rgb(52, 66, 255);
   cursor: pointer;
 }
 
 .content-text {
-  font-size: 1.3em;
+  font-size: 1.2em;
 }

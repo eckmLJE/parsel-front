@@ -146,9 +146,9 @@ class App extends Component {
             }}
           >
             <Grid
-              columns={2}
               padded
               relaxed
+              columns={2}
               style={{ backgroundColor: "white" }}
             >
               <Grid.Row>
