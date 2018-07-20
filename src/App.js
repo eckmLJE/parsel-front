@@ -8,50 +8,46 @@ import TitleBar from "./components/TitleBar";
 import { Grid, Segment } from "semantic-ui-react";
 import StatementList from "./components/StatementList";
 
+const statementsUrl = "http://localhost:3000/api/v1/statements";
+
 class App extends Component {
   constructor() {
     super();
     this.state = {
-      availableStatements: [
-        {
-          id: "1",
-          title: "Senator McCain's Response to Trump Putin Press Conference",
-          content:
-            "Today’s press conference in Helsinki was one of the most disgraceful performances by an American president in memory. The damage inflicted by President Trump’s naiveté, egotism, false equivalence, and sympathy for autocrats is difficult to calculate. But it is clear that the summit in Helsinki was a tragic mistake. President Trump proved not only unable, but unwilling to stand up to Putin. He and Putin seemed to be speaking from the same script as the president made a conscious choice to defend a tyrant against the fair questions of a free press, and to grant Putin an uncontested platform to spew propaganda and lies to the world. It is tempting to describe the press conference as a pathetic rout — as an illustration of the perils of under-preparation and inexperience. But these were not the errant tweets of a novice politician. These were the deliberate choices of a president who seems determined to realize his delusions of a warm relationship with Putin’s regime without any regard for the true nature of his rule, his violent disregard for the sovereignty of his neighbors, his complicity in the slaughter of the Syrian people, his violation of international treaties, and his assault on democratic institutions throughout the world. Coming close on the heels of President Trump’s bombastic and erratic conduct towards our closest friends and allies in Brussels and Britain, today’s press conference marks a recent low point in the history of the American Presidency. That the president was attended in Helsinki by a team of competent and patriotic advisors makes his blunders and capitulations all the more painful and inexplicable. No prior president has ever abased himself more abjectly before a tyrant. Not only did President Trump fail to speak the truth about an adversary; but speaking for America to the world, our president failed to defend all that makes us who we are — a republic of free people dedicated to the cause of liberty at home and abroad. American presidents must be the champions of that cause if it is to succeed. Americans are waiting and hoping for President Trump to embrace that sacred responsibility. One can only hope they are not waiting totally in vain. - John McCain"
-        }
-      ],
+      availableStatements: [],
+      availableAnnotations: [],
       currentStatement: null,
-      currentAnnotations: [
-        {
-          id: "1001",
-          start: 41,
-          end: 116,
-          content: "A powerful statement in its simplicity"
-        }, // one of the most disgraceful performances by an American president in memory
-        {
-          id: "1003",
-          start: 393,
-          end: 448,
-          content: "This could literally be true"
-        }, // He and Putin seemed to be speaking from the same script
-        {
-          id: "1002",
-          start: 251,
-          end: 315,
-          content: "Think of his entire team that is supporting this"
-        }, // But it is clear that the summit in Helsinki was a tragic mistake
-        {
-          id: "1004",
-          start: 419,
-          end: 489,
-          content: "A conscious choice? If he's not suffering from dementia"
-        } // speaking from the same script as the president made a conscious choice
-      ],
+      currentAnnotations: [],
       hoveredHighlight: "nothing"
     };
   }
 
-  componentDidMount = () => {};
+  componentDidMount = () => {
+    this.fetchStatements();
+  };
+
+  fetchStatements = () => {
+    fetch(statementsUrl)
+      .then(res => res.json())
+      // .then(json => console.log(json))
+      .then(json =>
+        this.setState({
+          availableStatements: json.data,
+          availableAnnotations: json.included.map(annotation => ({
+            id: this.convertId(annotation.id),
+            start: annotation.attributes.start,
+            end: annotation.attributes.end,
+            content: annotation.attributes.content,
+            statementId: annotation.attributes["statement-id"]
+          }))
+        })
+      );
+  };
+
+  convertId = id => {
+    let numId = parseInt(id) + 1000
+    return numId.toString()
+  }
 
   processAnnotations = () => {
     let highlights = [];
@@ -93,7 +89,7 @@ class App extends Component {
   };
 
   makeStatementArray = () => {
-    const statement = this.state.currentStatement.content;
+    const statement = this.state.currentStatement.attributes.content;
     const highlights = this.processAnnotations();
     let newStatementArray = [];
     let charCounter = 0;
@@ -142,8 +138,12 @@ class App extends Component {
     const statement = this.state.availableStatements.find(
       statement => statement.id === id
     );
+    const annotations = this.state.availableAnnotations.filter(
+      annotation => annotation.statementId == id
+    );
     this.setState({
-      currentStatement: statement
+      currentStatement: statement,
+      currentAnnotations: annotations
     });
   };
 
@@ -165,14 +165,14 @@ class App extends Component {
               {this.state.currentStatement ? (
                 <Statement
                   content={this.makeStatementArray()}
-                  title={this.state.currentStatement.title}
+                  title={this.state.currentStatement.attributes.title}
                 />
               ) : (
                 <Segment>Select an available Statement</Segment>
               )}
             </Grid.Column>
             <Grid.Column width={4}>
-              {this.state.currentStatement ? (
+              {this.state.currentAnnotations.length > 0 ? (
                 <Annotations
                   annotations={this.state.currentAnnotations}
                   hoveredHighlight={this.state.hoveredHighlight}

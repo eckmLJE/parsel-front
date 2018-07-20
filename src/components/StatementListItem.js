@@ -8,7 +8,7 @@ const StatementListItem = props => {
         active={props.activeItem === props.statement.id}
         onClick={props.handleItemClick}
       >
-        {props.statement.title}
+        {props.statement.attributes.title}
       </Menu.Item>
   );
 };
