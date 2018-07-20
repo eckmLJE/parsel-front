@@ -7,7 +7,7 @@ const AnnotationCard = props => {
     : "black";
 
   return (
-    <Segment inverted secondary padded color={color}>
+    <Segment inverted secondary color={color}>
       {props.annotation.content}
     </Segment>
   );

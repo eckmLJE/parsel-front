@@ -71,7 +71,6 @@ class App extends Component {
           end: annotation.end
         });
         lastEnd = annotation.end;
-        console.log("overlap detected!");
       }
     });
     return highlights;
@@ -92,7 +91,6 @@ class App extends Component {
     let charCounter = 0;
     highlights.forEach(highlight => {
       const highlightClass = this.checkHoverHighlight(highlight.name);
-      console.log(highlightClass);
       newStatementArray.push(
         <TextFragment
           key={newStatementArray.length}
@@ -120,7 +118,6 @@ class App extends Component {
   };
 
   setHoverHighlight = id => {
-    // console.log("set highlight id", id);
     this.setState({
       hoveredHighlight: id
     });
@@ -137,36 +134,26 @@ class App extends Component {
     return (
       <div className="App">
         <TitleBar />
+        <div style={{ height: 50 }} />
         {this.state.currentAnnotations.length > 0 ? (
-          <div
-            style={{
-              width: "75%",
-              margin: "auto",
-              backgroundColor: "grey"
-            }}
-          >
-            <Grid
-              padded
-              relaxed
-              columns={2}
-              style={{ backgroundColor: "white" }}
-            >
-              <Grid.Row>
-                <Grid.Column width={10}>
-                  <Statement
-                    content={this.makeStatementArray()}
-                    // makeStatementArray={this.makeStatementArray}
-                  />
-                </Grid.Column>
-                <Grid.Column width={6}>
-                  <Annotations
-                    annotations={this.state.currentAnnotations}
-                    hoveredHighlight={this.state.hoveredHighlight}
-                  />
-                </Grid.Column>
-              </Grid.Row>
-            </Grid>
-          </div>
+          <Grid padded relaxed columns={4}>
+            <Grid.Row>
+              <Grid.Column width={3} />
+              <Grid.Column width={8}>
+                <Statement
+                  content={this.makeStatementArray()}
+                  // makeStatementArray={this.makeStatementArray}
+                />
+              </Grid.Column>
+              <Grid.Column width={4}>
+                <Annotations
+                  annotations={this.state.currentAnnotations}
+                  hoveredHighlight={this.state.hoveredHighlight}
+                />
+              </Grid.Column>
+              <Grid.Column width={1} />
+            </Grid.Row>
+          </Grid>
         ) : null}
       </div>
     );

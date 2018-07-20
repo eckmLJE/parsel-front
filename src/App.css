@@ -1,6 +1,8 @@
 .title-bar {
   height: 50px;
   background-color: black;
+  position: fixed;
+  width: 100%;
 }
 
 .title {
