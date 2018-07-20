@@ -39,16 +39,11 @@ class App extends Component {
           content: "A conscious choice? If he's not suffering from dementia"
         } // speaking from the same script as the president made a conscious choice
       ],
-      annotationId: 1004,
-      currentHighlights: [],
-      statementArray: [],
       hoveredHighlight: "nothing"
     };
   }
 
-  componentDidMount = () => {
-    this.processAnnotations();
-  };
+  componentDidMount = () => {};
 
   processAnnotations = () => {
     let highlights = [];
@@ -79,7 +74,7 @@ class App extends Component {
         console.log("overlap detected!");
       }
     });
-    this.setState({ currentHighlights: highlights });
+    return highlights;
   };
 
   createHighlight = annotation => {
@@ -92,7 +87,7 @@ class App extends Component {
 
   makeStatementArray = () => {
     const statement = this.state.currentStatement;
-    const highlights = this.state.currentHighlights;
+    const highlights = this.processAnnotations();
     let newStatementArray = [];
     let charCounter = 0;
     highlights.forEach(highlight => {
@@ -122,9 +117,6 @@ class App extends Component {
         )
       : null;
     return newStatementArray;
-    // this.setState({
-    //   statementArray: newStatementArray
-    // });
   };
 
   setHoverHighlight = id => {
@@ -145,7 +137,7 @@ class App extends Component {
     return (
       <div className="App">
         <TitleBar />
-        {this.state.currentHighlights.length > 0 ? (
+        {this.state.currentAnnotations.length > 0 ? (
           <div
             style={{
               width: "75%",
@@ -167,7 +159,10 @@ class App extends Component {
                   />
                 </Grid.Column>
                 <Grid.Column width={6}>
-                  <Annotations annotations={this.state.currentAnnotations} />
+                  <Annotations
+                    annotations={this.state.currentAnnotations}
+                    hoveredHighlight={this.state.hoveredHighlight}
+                  />
                 </Grid.Column>
               </Grid.Row>
             </Grid>
