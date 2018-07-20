@@ -19,7 +19,7 @@ class Statement extends Component {
       <Card fluid className="statement">
         <Card.Content className="content-text">
           <Card.Header>Statement</Card.Header>
-          <Card.Description>{this.props.content}</Card.Description>
+          <Card.Description className="content-text">{this.props.content}</Card.Description>
         </Card.Content>
       </Card>
     );

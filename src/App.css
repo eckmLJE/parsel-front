@@ -11,14 +11,14 @@
 }
 
 .highlight {
-  background-color: greenyellow;
+  background-color: rgb(155, 170, 255);
 }
 
 .highlight-alt {
-  background-color: green;
+  background-color: rgb(111, 121, 255);
   cursor: pointer;
 }
 
 .content-text {
-  font-size: 1.2em;
+  font-size: 1.3em;
 }
