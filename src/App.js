@@ -45,7 +45,7 @@ class App extends Component {
   };
 
   convertId = id => {
-    let numId = parseInt(id) + 1000
+    let numId = parseInt(id, 10) + 1000
     return numId.toString()
   }
 
@@ -139,7 +139,7 @@ class App extends Component {
       statement => statement.id === id
     );
     const annotations = this.state.availableAnnotations.filter(
-      annotation => annotation.statementId == id
+      annotation => annotation.statementId.toString() === id
     );
     this.setState({
       currentStatement: statement,
