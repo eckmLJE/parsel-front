@@ -18,7 +18,8 @@ class App extends Component {
       availableAnnotations: [],
       currentStatement: null,
       currentAnnotations: [],
-      hoveredHighlight: "nothing"
+      hoveredHighlight: "nothing",
+      currentSelection: ""
     };
   }
 
@@ -45,9 +46,9 @@ class App extends Component {
   };
 
   convertId = id => {
-    let numId = parseInt(id, 10) + 1000
-    return numId.toString()
-  }
+    let numId = parseInt(id, 10) + 1000;
+    return numId.toString();
+  };
 
   processAnnotations = () => {
     let highlights = [];
@@ -147,10 +148,36 @@ class App extends Component {
     });
   };
 
-  getSelection = (e) => {
-    console.log(window.getSelection())
-    console.log(e)
-  }
+  getSelection = e => {
+    const selection = window.getSelection();
+    console.log(selection);
+    const base = selection.baseOffset;
+    const extent = selection.extentOffset;
+    if (!selection.baseNode.previousSibling) {
+      this.setState({
+        currentSelection: { start: base, end: extent }
+      });
+    } else if (
+      selection.baseNode.previousElementSibling.localName === "span" &&
+      !selection.nextSibling
+    ) {
+      const prevAnnotationId =
+        selection.baseNode.previousElementSibling.attributes.name.value;
+      const prevAnnotation = this.state.currentAnnotations.find(
+        annotation => annotation.id === prevAnnotationId
+      );
+      this.setState({
+        currentSelection: {
+          start: prevAnnotation.end + base,
+          end: prevAnnotation.end + extent
+        }
+      });
+    }
+  };
+
+  postAnnotation = annotation => {
+    console.log(annotation);
+  };
 
   render() {
     return (
