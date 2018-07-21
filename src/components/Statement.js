@@ -6,7 +6,7 @@ const Statement = props => {
     <Card
       fluid
       className="statement"
-      style={{ height: "80vh", overflowY: "scroll" }}
+      style={{ height: "55vh", overflowY: "scroll" }}
     >
       <Card.Content className="content-text">
         <Card.Header>{props.title}</Card.Header>

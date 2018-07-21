@@ -7,8 +7,10 @@ import Annotations from "./containers/Annotations";
 import TitleBar from "./components/TitleBar";
 import { Grid, Segment } from "semantic-ui-react";
 import StatementList from "./components/StatementList";
+import AnnotationWidget from "./components/AnnotationWidget";
 
 const statementsUrl = "http://localhost:3000/api/v1/statements";
+const annotationsUrl = "http://localhost:3000/api/v1/annotations";
 
 class App extends Component {
   constructor() {
@@ -144,7 +146,8 @@ class App extends Component {
     );
     this.setState({
       currentStatement: statement,
-      currentAnnotations: annotations
+      currentAnnotations: annotations,
+      currentSelection: null
     });
   };
 
@@ -153,13 +156,14 @@ class App extends Component {
     console.log(selection);
     const base = selection.baseOffset;
     const extent = selection.extentOffset;
-    if (!selection.baseNode.previousSibling) {
+    if (!selection.baseNode.previousSibling && selection.type === "Range") {
       this.setState({
         currentSelection: { start: base, end: extent }
       });
     } else if (
       selection.baseNode.previousElementSibling.localName === "span" &&
-      !selection.nextSibling
+      !selection.nextSibling &&
+      selection.type === "Range"
     ) {
       const prevAnnotationId =
         selection.baseNode.previousElementSibling.attributes.name.value;
@@ -172,11 +176,37 @@ class App extends Component {
           end: prevAnnotation.end + extent
         }
       });
+    } else if (selection.type === "Caret") {
+      this.setState({
+        currentSelection: null
+      });
     }
   };
 
-  postAnnotation = annotation => {
-    console.log(annotation);
+  postAnnotation = content => {
+    const annotation = {
+      statement_id: this.state.currentStatement.id,
+      content: content,
+      start: this.state.currentSelection.start,
+      end: this.state.currentSelection.end
+    };
+    fetch(annotationsUrl, {
+      method: "POST",
+      body: JSON.stringify(annotation),
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json"
+      }
+    })
+      .then(res => res.json())
+      .then(console.log);
+  };
+
+  getCurrentSelectionText = () => {
+    const statement = this.state.currentStatement.attributes.content;
+    const start = this.state.currentSelection.start;
+    const end = this.state.currentSelection.end;
+    return statement.slice(start, end);
   };
 
   render() {
@@ -195,11 +225,23 @@ class App extends Component {
             </Grid.Column>
             <Grid.Column width={7}>
               {this.state.currentStatement ? (
-                <Statement
-                  content={this.makeStatementArray()}
-                  title={this.state.currentStatement.attributes.title}
-                  getSelection={this.getSelection}
-                />
+                <div>
+                  <Segment>
+                    <Statement
+                      content={this.makeStatementArray()}
+                      title={this.state.currentStatement.attributes.title}
+                      getSelection={this.getSelection}
+                    />
+                  </Segment>
+                  {this.state.currentSelection ? (
+                    <Segment>
+                      <AnnotationWidget
+                        postAnnotation={this.postAnnotation}
+                        selection={this.getCurrentSelectionText()}
+                      />
+                    </Segment>
+                  ) : null}
+                </div>
               ) : (
                 <Segment>Select an available Statement</Segment>
               )}

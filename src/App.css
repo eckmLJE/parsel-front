@@ -18,7 +18,7 @@
 
 .highlight-alt {
   background-color: rgb(52, 66, 255);
-  /* cursor: pointer; */
+  cursor: pointer;
 }
 
 .annotation:hover {
