@@ -36,15 +36,21 @@ class App extends Component {
       .then(json =>
         this.setState({
           availableStatements: json.data,
-          availableAnnotations: json.included.map(annotation => ({
-            id: this.convertId(annotation.id),
-            start: annotation.attributes.start,
-            end: annotation.attributes.end,
-            content: annotation.attributes.content,
-            statementId: annotation.attributes["statement-id"]
-          }))
+          availableAnnotations: json.included.map(annotation =>
+            this.convertAnnotation(annotation)
+          )
         })
       );
+  };
+
+  convertAnnotation = annotation => {
+    return {
+      id: this.convertId(annotation.id),
+      start: annotation.attributes.start,
+      end: annotation.attributes.end,
+      content: annotation.attributes.content,
+      statementId: annotation.attributes["statement-id"]
+    };
   };
 
   convertId = id => {
@@ -199,7 +205,15 @@ class App extends Component {
       }
     })
       .then(res => res.json())
-      .then(console.log);
+      .then(json =>
+        this.setState({
+          currentAnnotations: [
+            ...this.state.currentAnnotations,
+            this.convertAnnotation(json.data)
+          ],
+          currentSelection: ""
+        })
+      );
   };
 
   getCurrentSelectionText = () => {
